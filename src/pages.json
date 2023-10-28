@@ -8,9 +8,9 @@
       }
     },
     {
-      "path": "pages/my/my",
+      "path": "pages/category/category",
       "style": {
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "分类"
       }
     },
     {
@@ -20,9 +20,9 @@
       }
     },
     {
-      "path": "pages/category/category",
+      "path": "pages/my/my",
       "style": {
-        "navigationBarTitleText": "分类"
+        "navigationBarTitleText": "我的"
       }
     },
     {

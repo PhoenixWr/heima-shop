@@ -78,5 +78,16 @@
         "selectedIconPath": "static/tabs/user_selected.png"
       }
     ]
+  },
+  // 启动模式配置，仅开发期间生效
+  "condition": {
+    "current": 0, // 当前激活的模式(list的索引项)
+    // 启动模式列表
+    "list": [
+      {
+        "name": "my", // 启动模式名称
+        "path": "pages/my/my" // 启动页面路径
+      }
+    ]
   }
 }

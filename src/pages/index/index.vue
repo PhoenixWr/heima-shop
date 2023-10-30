@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <xtx-nav-bar></xtx-nav-bar>
   <view class="index">index</view>
 </template>
 

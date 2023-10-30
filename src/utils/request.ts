@@ -21,3 +21,44 @@ const interceptorOptions: UniApp.InterceptorOptions = {
 } // 普通网络请求和文件上传共用的拦截器配置
 uni.addInterceptor('request', interceptorOptions)
 uni.addInterceptor('uploadFile', interceptorOptions)
+
+// 后端返回数据通用接口
+interface Data<T> {
+  code: string
+  msg: string
+  result: T
+}
+// 封装请求函数
+const request = <T>(options: UniApp.RequestOptions) =>
+  new Promise<Data<T>>((resolve, reject) => {
+    uni.request({
+      ...options,
+      // 网络请求成功回调
+      success(response) {
+        // 响应状态码范围在 200-299 之间 => 获取数据成功(axios设计原理)
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          resolve(response.data as Data<T>) // 类型断言指定具体类型
+        } else if (response.statusCode === 401) {
+          // TODO 401错误(token校验失败) => 清理用户信息跳转登录页
+          reject(response)
+        } else {
+          // 通用错误 => 根据后端错误消息进行轻提示
+          uni.showToast({
+            icon: 'none',
+            title: (response.data as Data<T>).msg || '请求错误',
+          })
+          reject(response)
+        }
+      },
+      // 网络请求失败回调
+      fail(error) {
+        uni.showToast({
+          icon: 'none',
+          title: '网络异常，稍后再试',
+        })
+        reject(error)
+      },
+    })
+  })
+
+export default request

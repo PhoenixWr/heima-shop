@@ -1,7 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+// 获取手机状态栏高度
+const { statusBarHeight } = uni.getSystemInfoSync()
+// 自定义导航栏顶部内边距 适配不同机型状态栏
+const navBarPaddingTop = computed(() => {
+  if (!statusBarHeight) return '20px'
+  return `${statusBarHeight}px`
+})
+</script>
 
 <template>
-  <view class="xtx-nav-bar">
+  <view class="xtx-nav-bar" :style="{ paddingTop: navBarPaddingTop }">
     <!-- logo文字 -->
     <view class="logo">
       <image class="logo-image" src="@/static/images/logo.png"></image>

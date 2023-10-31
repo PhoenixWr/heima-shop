@@ -4,7 +4,7 @@ import { ref } from 'vue'
 const activeIndex = ref(0) // 轮播图当前激活项索引
 // swiper下标发生改变时触发
 const onSwiperChange: UniHelper.SwiperOnChange = (event) => {
-  // !. 非空断言，主观上排除空值的情况
+  // !.(非空断言) 主观上排除空值的情况
   activeIndex.value = event.detail.current
 }
 </script>

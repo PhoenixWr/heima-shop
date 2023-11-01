@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { BannerItem, CategoryItem } from '@/types/home'
+import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 
 /**
  * 获取轮播图数据
@@ -21,4 +21,13 @@ export const getHomeCategoryApi = () =>
   request<CategoryItem[]>({
     method: 'GET',
     url: '/home/category/mutli',
+  })
+
+/**
+ * 获取热门推荐数据
+ */
+export const getHomeHotApi = () =>
+  request<HotItem[]>({
+    method: 'GET',
+    url: '/home/hot/mutli',
   })

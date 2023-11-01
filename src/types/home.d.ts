@@ -19,3 +19,19 @@ export type CategoryItem = {
   /** 图标路径 */
   icon: string
 }
+
+/** 首页-热门推荐数据类型 */
+export type HotItem = {
+  /** id */
+  id: string
+  /** 推荐说明 */
+  alt: string
+  /** 图片路径集合 */
+  pictures: string[]
+  /** 跳转地址 */
+  target: string
+  /** 推荐标题 */
+  title: string
+  /** 推荐类型 */
+  type: string
+}

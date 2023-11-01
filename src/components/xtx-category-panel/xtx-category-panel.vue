@@ -1,21 +1,28 @@
 <script setup lang="ts">
-//
+import { ref } from 'vue'
+import type { CategoryItem } from '@/types/home'
+import { getHomeCategoryApi } from '@/services/home'
+
+const categoryList = ref<CategoryItem[]>([]) // 前台分类列表
+/** 获取前台分类列表数据 */
+const getCategoryList = async () => {
+  const res = await getHomeCategoryApi()
+  categoryList.value = res.result
+}
+getCategoryList()
 </script>
 
 <template>
   <view class="category">
     <navigator
+      v-for="item in categoryList"
+      :key="item.id"
       class="category-item"
       hover-class="none"
       url="/pages/index/index"
-      v-for="item in 10"
-      :key="item"
     >
-      <image
-        class="icon"
-        src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/nav_icon_1.png"
-      ></image>
-      <text class="text">居家</text>
+      <image class="icon" :src="item.icon"></image>
+      <text class="text">{{ item.name }}</text>
     </navigator>
   </view>
 </template>

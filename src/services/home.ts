@@ -1,6 +1,5 @@
-// 首页接口请求模块
 import request from '@/utils/request'
-import type { BannerItem } from '@/types/home'
+import type { BannerItem, CategoryItem } from '@/types/home'
 
 /**
  * 获取轮播图数据
@@ -13,4 +12,13 @@ export const getHomeBannerApi = (distributionSite: 1 | 2 = 1) =>
     data: {
       distributionSite,
     },
+  })
+
+/**
+ * 获取前台分类数据
+ */
+export const getHomeCategoryApi = () =>
+  request<CategoryItem[]>({
+    method: 'GET',
+    url: '/home/category/mutli',
   })

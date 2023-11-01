@@ -22,9 +22,13 @@ onLoad(() => {
   <xtx-nav-bar></xtx-nav-bar>
   <!-- 轮播图 -->
   <xtx-swiper :list="bannerList"></xtx-swiper>
+  <!-- 分类面板 -->
+  <xtx-category-panel></xtx-category-panel>
   <view class="index">index</view>
 </template>
 
 <style lang="scss">
-//
+page {
+  background-color: #f7f7f7;
+}
 </style>

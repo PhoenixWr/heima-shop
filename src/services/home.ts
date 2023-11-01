@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
+import type { PageResult } from '@/types/global'
+import type { BannerItem, CategoryItem, HotItem, GuessItem } from '@/types/home'
 
 /**
  * 获取轮播图数据
@@ -30,4 +31,13 @@ export const getHomeHotApi = () =>
   request<HotItem[]>({
     method: 'GET',
     url: '/home/hot/mutli',
+  })
+
+/**
+ * 获取猜你喜欢数据
+ */
+export const getHomeGoodsGuessLikeApi = () =>
+  request<PageResult<GuessItem>>({
+    method: 'GET',
+    url: '/home/goods/guessLike',
   })

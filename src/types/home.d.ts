@@ -33,5 +33,5 @@ export type HotItem = {
   /** 推荐标题 */
   title: string
   /** 推荐类型 */
-  type: string
+  type: number
 }

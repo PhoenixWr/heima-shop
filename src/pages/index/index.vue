@@ -24,17 +24,23 @@ onLoad(() => {
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
-  <!-- 轮播图 -->
-  <XtxSwiper :list="bannerList" />
-  <!-- 分类面板 -->
-  <CategoryPanel />
-  <!-- 热门推荐 -->
-  <HotPanel />
-  <view class="index">index</view>
+  <scroll-view scroll-y>
+    <!-- 轮播图 -->
+    <XtxSwiper :list="bannerList" />
+    <!-- 分类面板 -->
+    <CategoryPanel />
+    <!-- 热门推荐 -->
+    <HotPanel />
+    <!-- 猜你喜欢 -->
+    <XtxGuess />
+  </scroll-view>
 </template>
 
 <style lang="scss">
 page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background-color: #f7f7f7;
 }
 </style>

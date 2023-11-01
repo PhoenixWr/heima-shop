@@ -1,25 +1,32 @@
 <script setup lang="ts">
-//
+import { ref } from 'vue'
+import type { HotItem } from '@/types/home'
+import { getHomeHotApi } from '@/services/home'
+
+const hotList = ref<HotItem[]>([]) // 热门推荐列表
+/** 获取热门推荐列表数据 */
+const getHotList = async () => {
+  const res = await getHomeHotApi()
+  hotList.value = res.result
+}
+getHotList()
 </script>
 
 <template>
   <!-- 推荐专区 -->
   <view class="panel hot">
-    <view class="item" v-for="item in 4" :key="item">
+    <view class="item" v-for="item in hotList" :key="item.id">
       <view class="title">
-        <text class="title-text">特惠推荐</text>
-        <text class="title-desc">精选全攻略</text>
+        <text class="title-text">{{ item.title }}</text>
+        <text class="title-desc">{{ item.alt }}</text>
       </view>
       <navigator hover-class="none" url="/pages/hot/hot" class="cards">
         <image
+          v-for="picture in item.pictures"
+          :key="picture"
           class="image"
           mode="aspectFit"
-          src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_small_1.jpg"
-        ></image>
-        <image
-          class="image"
-          mode="aspectFit"
-          src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_small_2.jpg"
+          :src="picture"
         ></image>
       </navigator>
     </view>

@@ -24,6 +24,8 @@ onLoad(() => {
   <xtx-swiper :list="bannerList"></xtx-swiper>
   <!-- 分类面板 -->
   <xtx-category-panel></xtx-category-panel>
+  <!-- 热门推荐 -->
+  <xtx-hot-panel></xtx-hot-panel>
   <view class="index">index</view>
 </template>
 

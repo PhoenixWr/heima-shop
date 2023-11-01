@@ -3,6 +3,10 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem } from '@/types/home'
 import { getHomeBannerApi } from '@/services/home'
+// 导入组件
+import CustomNavbar from './components/CustomNavbar.vue'
+import CategoryPanel from './components/CategoryPanel.vue'
+import HotPanel from './components/HotPanel.vue'
 
 const bannerList = ref<BannerItem[]>([]) // 轮播图列表
 /** 获取轮播图列表数据 */
@@ -19,13 +23,13 @@ onLoad(() => {
 
 <template>
   <!-- 自定义导航栏 -->
-  <xtx-nav-bar></xtx-nav-bar>
+  <CustomNavbar />
   <!-- 轮播图 -->
-  <xtx-swiper :list="bannerList"></xtx-swiper>
+  <XtxSwiper :list="bannerList" />
   <!-- 分类面板 -->
-  <xtx-category-panel></xtx-category-panel>
+  <CategoryPanel />
   <!-- 热门推荐 -->
-  <xtx-hot-panel></xtx-hot-panel>
+  <HotPanel />
   <view class="index">index</view>
 </template>
 

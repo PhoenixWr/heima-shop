@@ -11,7 +11,7 @@ const navBarPaddingTop = computed(() => {
 </script>
 
 <template>
-  <view class="xtx-nav-bar" :style="{ paddingTop: navBarPaddingTop }">
+  <view class="navbar" :style="{ paddingTop: navBarPaddingTop }">
     <!-- logo文字 -->
     <view class="logo">
       <image class="logo-image" src="@/static/images/logo.png"></image>
@@ -27,7 +27,7 @@ const navBarPaddingTop = computed(() => {
 
 <style lang="scss">
 /* 自定义导航条 */
-.xtx-nav-bar {
+.navbar {
   background-image: url(@/static/images/navigator_bg.png);
   background-size: cover;
   position: relative;

@@ -1,8 +1,5 @@
 // 全局组件类型声明
-import XtxNavBar from '@/components/xtx-nav-bar/xtx-nav-bar.vue'
-import XtxSwiper from '@/components/xtx-swiper/xtx-swiper.vue'
-import XtxCategoryPanel from '@/components/xtx-category-panel/xtx-category-panel.vue'
-import XtxHotPanel from '@/components/xtx-hot-panel/xtx-hot-panel.vue'
+import XtxSwiper from '@/components/XtxSwiper.vue'
 
 /**
  * declare module '@vue/runtime-core'
@@ -12,9 +9,6 @@ import XtxHotPanel from '@/components/xtx-hot-panel/xtx-hot-panel.vue'
 import 'vue'
 declare module 'vue' {
   export interface GlobalComponents {
-    XtxNavBar: typeof XtxNavBar
     XtxSwiper: typeof XtxSwiper
-    XtxCategoryPanel: typeof XtxCategoryPanel
-    XtxHotPanel: typeof XtxHotPanel
   }
 }

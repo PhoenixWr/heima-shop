@@ -2,6 +2,7 @@
 import XtxNavBar from '@/components/xtx-nav-bar/xtx-nav-bar.vue'
 import XtxSwiper from '@/components/xtx-swiper/xtx-swiper.vue'
 import XtxCategoryPanel from '@/components/xtx-category-panel/xtx-category-panel.vue'
+import XtxHotPanel from '@/components/xtx-hot-panel/xtx-hot-panel.vue'
 
 /**
  * declare module '@vue/runtime-core'
@@ -14,5 +15,6 @@ declare module 'vue' {
     XtxNavBar: typeof XtxNavBar
     XtxSwiper: typeof XtxSwiper
     XtxCategoryPanel: typeof XtxCategoryPanel
+    XtxHotPanel: typeof XtxHotPanel
   }
 }

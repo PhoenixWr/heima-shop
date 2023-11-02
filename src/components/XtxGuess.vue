@@ -11,21 +11,30 @@ const pageParams: Required<PageParams> = {
 }
 // 猜你喜欢列表
 const guessList = ref<GuessItem[]>([])
+// 分页加载节流阀
+const isLoading = ref(false)
 // 分页数据加载完成标识
-const finish = ref(false)
+const isFinish = ref(false)
 // 获取猜你喜欢列表数据
 const getGuessList = async () => {
-  if (finish.value) {
+  if (isLoading.value) return
+  if (isFinish.value) {
     return uni.showToast({
       icon: 'none',
       title: '没有更多数据了~',
     })
   }
-  const res = await getHomeGoodsGuessLikeApi(pageParams)
-  guessList.value.push(...res.result.items)
-  // 分页条件
-  if (pageParams.page < res.result.pages) pageParams.page++
-  else finish.value = true
+  try {
+    isLoading.value = true
+    const res = await getHomeGoodsGuessLikeApi(pageParams)
+    isLoading.value = false
+    guessList.value.push(...res.result.items)
+    // 分页条件
+    if (pageParams.page < res.result.pages) pageParams.page++
+    else isFinish.value = true
+  } catch (error) {
+    isLoading.value = false
+  }
 }
 getGuessList()
 
@@ -56,7 +65,7 @@ defineExpose({
     </navigator>
   </view>
   <view class="loading-text">
-    {{ finish ? '没有更多数据了' : '正在加载...' }}
+    {{ isFinish ? '没有更多数据了' : '正在加载...' }}
   </view>
 </template>
 

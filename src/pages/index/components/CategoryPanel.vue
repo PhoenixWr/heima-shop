@@ -1,21 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { CategoryItem } from '@/types/home'
-import { getHomeCategoryApi } from '@/services/home'
 
-const categoryList = ref<CategoryItem[]>([]) // 前台分类列表
-/** 获取前台分类列表数据 */
-const getCategoryList = async () => {
-  const res = await getHomeCategoryApi()
-  categoryList.value = res.result
-}
-getCategoryList()
+defineProps<{
+  list: CategoryItem[]
+}>()
 </script>
 
 <template>
   <view class="category">
     <navigator
-      v-for="item in categoryList"
+      v-for="item in list"
       :key="item.id"
       class="category-item"
       hover-class="none"

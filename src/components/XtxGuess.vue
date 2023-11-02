@@ -14,11 +14,11 @@ const guessList = ref<GuessItem[]>([])
 // 分页加载节流阀
 const isLoading = ref(false)
 // 分页数据加载完成标识
-const isFinish = ref(false)
-// 获取猜你喜欢列表数据
+const isFinished = ref(false)
+/** 获取猜你喜欢列表数据 */
 const getGuessList = async () => {
   if (isLoading.value) return
-  if (isFinish.value) {
+  if (isFinished.value) {
     return uni.showToast({
       icon: 'none',
       title: '没有更多数据了~',
@@ -31,16 +31,25 @@ const getGuessList = async () => {
     guessList.value.push(...res.result.items)
     // 分页条件
     if (pageParams.page < res.result.pages) pageParams.page++
-    else isFinish.value = true
+    else isFinished.value = true
   } catch (error) {
     isLoading.value = false
   }
 }
 getGuessList()
 
+/** 重置分页加载相关数据 */
+const resetData = () => {
+  pageParams.page = 1
+  guessList.value = []
+  isLoading.value = false
+  isFinished.value = false
+}
+
 // 暴露方法
 defineExpose({
-  getMore: getGuessList,
+  getGuessList,
+  resetData,
 })
 </script>
 
@@ -65,7 +74,7 @@ defineExpose({
     </navigator>
   </view>
   <view class="loading-text">
-    {{ isFinish ? '没有更多数据了' : '正在加载...' }}
+    {{ isFinished ? '没有更多数据了' : '正在加载...' }}
   </view>
 </template>
 

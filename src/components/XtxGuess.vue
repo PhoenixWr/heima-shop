@@ -11,6 +11,11 @@ const getGuessList = async () => {
   guessList.value = res.result.items
 }
 getGuessList()
+
+// 暴露方法
+defineExpose({
+  getMore: getGuessList,
+})
 </script>
 
 <template>

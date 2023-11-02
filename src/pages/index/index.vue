@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem } from '@/types/home'
+import type { XtxGuessInstance } from '@/types/components'
 import { getHomeBannerApi } from '@/services/home'
 // 导入组件
 import CustomNavbar from './components/CustomNavbar.vue'
@@ -19,12 +20,17 @@ const getBannerList = async () => {
 onLoad(() => {
   getBannerList()
 })
+
+// 猜你喜欢组件实例
+const xtxGuessRef = ref<XtxGuessInstance | null>(null)
+// scroll-view 滚动到底部/右边时触发
+const OnScrollToLower = () => {}
 </script>
 
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
-  <scroll-view scroll-y>
+  <scroll-view scroll-y @scrolltolower="OnScrollToLower">
     <!-- 轮播图 -->
     <XtxSwiper :list="bannerList" />
     <!-- 分类面板 -->
@@ -32,7 +38,7 @@ onLoad(() => {
     <!-- 热门推荐 -->
     <HotPanel />
     <!-- 猜你喜欢 -->
-    <XtxGuess />
+    <XtxGuess ref="xtxGuessRef" />
   </scroll-view>
 </template>
 

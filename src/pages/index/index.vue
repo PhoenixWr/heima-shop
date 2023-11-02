@@ -24,7 +24,9 @@ onLoad(() => {
 // 猜你喜欢组件实例
 const xtxGuessRef = ref<XtxGuessInstance | null>(null)
 // scroll-view 滚动到底部/右边时触发
-const OnScrollToLower = () => {}
+const OnScrollToLower = () => {
+  xtxGuessRef.value?.getMore()
+}
 </script>
 
 <template>

@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { PageParams } from '@/types/global'
 import type { GuessItem } from '@/types/home'
 import { getHomeGoodsGuessLikeApi } from '@/services/home'
 
+// 分页参数
+const pageParams: Required<PageParams> = {
+  page: 1,
+  pageSize: 10,
+}
 // 猜你喜欢列表
 const guessList = ref<GuessItem[]>([])
 // 获取猜你喜欢列表数据
 const getGuessList = async () => {
-  const res = await getHomeGoodsGuessLikeApi()
-  guessList.value = res.result.items
+  const res = await getHomeGoodsGuessLikeApi(pageParams)
+  guessList.value.push(...res.result.items)
+  pageParams.page++
 }
 getGuessList()
 

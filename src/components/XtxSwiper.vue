@@ -16,7 +16,7 @@ defineProps<{
 
 <template>
   <view class="carousel">
-    <swiper circular autoplay :interval="5000" @change="onSwiperChange">
+    <swiper circular @change="onSwiperChange">
       <swiper-item v-for="item in list" :key="item.id">
         <navigator url="/pages/index/index" hover-class="none" class="navigator">
           <image mode="aspectFill" class="image" :src="item.imgUrl"></image>

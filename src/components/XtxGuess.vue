@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { PageParams } from '@/types/global'
 import type { GuessItem } from '@/types/home'
 import { getHomeGoodsGuessLikeApi } from '@/services/home'
@@ -36,7 +36,11 @@ const getGuessList = async () => {
     isLoading.value = false
   }
 }
-getGuessList()
+// 直接在 setup 函数内发起的请求，因骨架屏和 template 条件渲染原因
+// 会导致发起多次，这里改造为组件挂载完毕再发起请求
+onMounted(() => {
+  getGuessList()
+})
 
 /** 重置分页加载相关数据 */
 const resetData = () => {

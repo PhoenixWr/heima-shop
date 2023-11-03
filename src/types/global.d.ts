@@ -19,3 +19,21 @@ export type PageParams = {
   /** 分页尺寸：默认值为 10 */
   pageSize?: number
 }
+
+/** 通用商品类型 */
+export type GoodsItem = {
+  /** id */
+  id: string
+  /** 商品名称 */
+  name: string
+  /** 商品描述 */
+  desc: string | null
+  /** 商品价格 */
+  price: string
+  /** 商品图片 */
+  picture: string
+  /** 商品折扣 */
+  discount?: number
+  /** 商品已下单数量 */
+  orderNum: number
+}

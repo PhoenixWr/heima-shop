@@ -1,3 +1,5 @@
+import type { GoodsItem } from './global'
+
 /** 首页-轮播图数据类型 */
 export type BannerItem = {
   /** id */
@@ -37,19 +39,4 @@ export type HotItem = {
 }
 
 /** 首页-猜你喜欢-商品类型 */
-export type GuessItem = {
-  /** id */
-  id: string
-  /** 商品名称 */
-  name: string
-  /** 商品描述 */
-  desc: string | null
-  /** 商品价格 */
-  price: string
-  /** 商品图片 */
-  picture: string
-  /** 商品折扣 */
-  discount?: number
-  /** 商品已下单数量 */
-  orderNum: number
-}
+export type GuessItem = GoodsItem

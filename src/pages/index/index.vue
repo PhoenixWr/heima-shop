@@ -8,6 +8,7 @@ import { getHomeBannerApi, getHomeCategoryApi, getHomeHotApi } from '@/services/
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 const bannerList = ref<BannerItem[]>([]) // 轮播图列表
 /** 获取轮播图列表数据 */
@@ -30,11 +31,13 @@ const getHotList = async () => {
   hotList.value = res.result
 }
 
+// 页面加载状态 控制骨架屏是否展示
+const isLoading = ref(false)
 // 监听页面加载
-onLoad(() => {
-  getBannerList()
-  getCategoryList()
-  getHotList()
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getBannerList(), getCategoryList(), getHotList()])
+  isLoading.value = false
 })
 
 // 猜你喜欢组件实例
@@ -72,14 +75,18 @@ const onRefresherRefresh = async () => {
     @scrolltolower="OnScrollToLower"
     @refresherrefresh="onRefresherRefresh"
   >
-    <!-- 轮播图 -->
-    <XtxSwiper :list="bannerList" />
-    <!-- 分类面板 -->
-    <CategoryPanel :list="categoryList" />
-    <!-- 热门推荐 -->
-    <HotPanel :list="hotList" />
-    <!-- 猜你喜欢 -->
-    <XtxGuess ref="xtxGuessRef" />
+    <!-- 骨架屏 -->
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <!-- 轮播图 -->
+      <XtxSwiper :list="bannerList" />
+      <!-- 分类面板 -->
+      <CategoryPanel :list="categoryList" />
+      <!-- 热门推荐 -->
+      <HotPanel :list="hotList" />
+      <!-- 猜你喜欢 -->
+      <XtxGuess ref="xtxGuessRef" />
+    </template>
   </scroll-view>
 </template>
 

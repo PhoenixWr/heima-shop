@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import type { PageParams } from '@/types/global'
+import type { HotResult } from '@/types/hot'
 
 /** 通用热门推荐接口参数类型 */
 type HotParams = PageParams & {
@@ -12,7 +13,7 @@ type HotParams = PageParams & {
  * @param data 请求参数
  */
 export const getHotRecommendApi = (url: string, data?: HotParams) =>
-  request({
+  request<HotResult>({
     method: 'GET',
     url,
     data,

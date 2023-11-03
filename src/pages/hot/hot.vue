@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { onReady } from '@dcloudio/uni-app'
+import { onLoad, onReady } from '@dcloudio/uni-app'
+import { getHotRecommendApi } from '@/services/hot'
 
 // 热门推荐页 标题和url
 const hotMap = [
@@ -22,6 +23,16 @@ onReady(() => {
   uni.setNavigationBarTitle({
     title: pageInfo.value!.title,
   })
+})
+
+// 获取热门推荐数据
+const getHotRecommendData = async () => {
+  const res = await getHotRecommendApi(pageInfo.value!.url)
+  console.log(res)
+}
+// 监听页面加载
+onLoad(() => {
+  getHotRecommendData()
 })
 </script>
 

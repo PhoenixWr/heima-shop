@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { onReady } from '@dcloudio/uni-app'
+
 // 热门推荐页 标题和url
 const hotMap = [
   { type: '1', title: '特惠推荐', url: '/hot/preference' },
@@ -6,6 +9,20 @@ const hotMap = [
   { type: '3', title: '一站买全', url: '/hot/oneStop' },
   { type: '4', title: '新鲜好物', url: '/hot/new' },
 ]
+
+// uniapp 获取页面参数
+const query = defineProps<{
+  type: string
+}>()
+// 页面信息 包含导航栏标题以及url
+const pageInfo = computed(() => hotMap.find((item) => item.type === query.type))
+// 监听页面初次渲染完成
+onReady(() => {
+  // 动态设置页面导航栏标题
+  uni.setNavigationBarTitle({
+    title: pageInfo.value!.title,
+  })
+})
 </script>
 
 <template>

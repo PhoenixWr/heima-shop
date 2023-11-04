@@ -39,6 +39,24 @@ const getHotRecommendData = async () => {
 onLoad(() => {
   getHotRecommendData()
 })
+
+/**
+ * scroll-view 滚动到底部/右边触发回调函数
+ * @param item 当前被激活的推荐选项对象的引用变量
+ */
+const onScrolltolower = async (item: SubTypeItem) => {
+  // 页码值加1
+  item.goodsItems.page++
+  // 请求分页数据
+  const res = await getHotRecommendApi(pageInfo.value!.url, {
+    subType: item.id,
+    page: item.goodsItems.page,
+    pageSize: item.goodsItems.pageSize,
+  })
+  const { items } = res.result.subTypes[activeIndex.value].goodsItems
+  // 追加分页数据
+  item.goodsItems.items.push(...items)
+}
 </script>
 
 <template>
@@ -65,6 +83,7 @@ onLoad(() => {
       :key="item.id"
       scroll-y
       class="scroll-view"
+      @scrolltolower="onScrolltolower(item)"
     >
       <view class="goods">
         <navigator

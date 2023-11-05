@@ -102,6 +102,10 @@
         "name": "hot",
         "path": "pages/hot/hot",
         "query": "type=1"
+      },
+      {
+        "name": "category",
+        "path": "pages/category/category"
       }
     ]
   }

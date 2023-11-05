@@ -26,12 +26,20 @@ onReady(() => {
   })
 })
 
+/** 子类选项追加用于优化的字段 */
+type SubTypeItemPerf = SubTypeItem & {
+  /** 分页数据加载完成标识 */
+  isFinished?: boolean
+}
 const bannerPicture = ref('') // 推荐封面图
-const subTypes = ref<SubTypeItem[]>([]) // 推荐选项
+const subTypes = ref<SubTypeItemPerf[]>([]) // 推荐选项
 const activeIndex = ref(0) // 推荐选项激活项索引
 // 获取热门推荐数据
 const getHotRecommendData = async () => {
-  const res = await getHotRecommendApi(pageInfo.value!.url)
+  const res = await getHotRecommendApi(pageInfo.value!.url, {
+    // 技巧：使用 Vite 环境变量 => 开发环境下修改页码值方便调试
+    // page: import.meta.env.DEV ? 30 : 1,
+  })
   bannerPicture.value = res.result.bannerPicture
   subTypes.value = res.result.subTypes
 }
@@ -44,7 +52,13 @@ onLoad(() => {
  * scroll-view 滚动到底部/右边触发回调函数
  * @param item 当前被激活的推荐选项对象的引用变量
  */
-const onScrolltolower = async (item: SubTypeItem) => {
+const onScrolltolower = async (item: SubTypeItemPerf) => {
+  if (item.isFinished) {
+    return uni.showToast({
+      icon: 'none',
+      title: '没有更多数据了~',
+    })
+  }
   // 页码值加1
   item.goodsItems.page++
   // 请求分页数据
@@ -53,9 +67,14 @@ const onScrolltolower = async (item: SubTypeItem) => {
     page: item.goodsItems.page,
     pageSize: item.goodsItems.pageSize,
   })
-  const { items } = res.result.subTypes[activeIndex.value].goodsItems
+  const { items, page, pages } = res.result.subTypes[activeIndex.value].goodsItems
   // 追加分页数据
   item.goodsItems.items.push(...items)
+  // 分页结束判断条件
+  if (page >= pages) {
+    // 修改分页加载结束标识
+    item.isFinished = true
+  }
 }
 </script>
 
@@ -101,7 +120,9 @@ const onScrolltolower = async (item: SubTypeItem) => {
           </view>
         </navigator>
       </view>
-      <view class="loading-text">正在加载...</view>
+      <view class="loading-text">
+        {{ item.isFinished ? '没有更多数据了' : '正在加载...' }}
+      </view>
     </scroll-view>
   </view>
 </template>

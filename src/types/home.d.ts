@@ -9,7 +9,7 @@ export type BannerItem = {
   /** 跳转链接 */
   hrefUrl: string
   /** 跳转类型 1: 页面 2: H5 3: 小程序 */
-  type: number
+  type: string
 }
 
 /** 首页-前台分类数据类型 */

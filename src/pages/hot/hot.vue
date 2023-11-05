@@ -30,6 +30,8 @@ onReady(() => {
 type SubTypeItemPerf = SubTypeItem & {
   /** 分页数据加载完成标识 */
   isFinished?: boolean
+  /** 分页加载节流阀 */
+  isLoading?: boolean
 }
 const bannerPicture = ref('') // 推荐封面图
 const subTypes = ref<SubTypeItemPerf[]>([]) // 推荐选项
@@ -53,6 +55,7 @@ onLoad(() => {
  * @param item 当前被激活的推荐选项对象的引用变量
  */
 const onScrolltolower = async (item: SubTypeItemPerf) => {
+  if (item.isLoading) return
   if (item.isFinished) {
     return uni.showToast({
       icon: 'none',
@@ -61,19 +64,26 @@ const onScrolltolower = async (item: SubTypeItemPerf) => {
   }
   // 页码值加1
   item.goodsItems.page++
-  // 请求分页数据
-  const res = await getHotRecommendApi(pageInfo.value!.url, {
-    subType: item.id,
-    page: item.goodsItems.page,
-    pageSize: item.goodsItems.pageSize,
-  })
-  const { items, page, pages } = res.result.subTypes[activeIndex.value].goodsItems
-  // 追加分页数据
-  item.goodsItems.items.push(...items)
-  // 分页结束判断条件
-  if (page >= pages) {
-    // 修改分页加载结束标识
-    item.isFinished = true
+  try {
+    item.isLoading = true
+    // 请求分页数据
+    const res = await getHotRecommendApi(pageInfo.value!.url, {
+      subType: item.id,
+      page: item.goodsItems.page,
+      pageSize: item.goodsItems.pageSize,
+    })
+    item.isLoading = false
+    const { items, page, pages } = res.result.subTypes[activeIndex.value].goodsItems
+    // 追加分页数据
+    item.goodsItems.items.push(...items)
+    // 分页结束判断条件
+    if (page >= pages) {
+      // 修改分页加载结束标识
+      item.isFinished = true
+    }
+  } catch (error) {
+    // 重置分页加载节流阀状态
+    item.isLoading = false
   }
 }
 </script>

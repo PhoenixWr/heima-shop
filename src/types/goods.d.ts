@@ -21,7 +21,7 @@ export type GoodsResult = {
   /** 商品详情: 包含详情属性 + 详情图片 */
   details: Details
   /** 用户地址列表[ 地址信息 ] */
-  userAddresses: UserAddressItem[]
+  userAddresses: UserAddressItem[] | null
   /** 同类商品[ 商品信息 ] */
   similarProducts: GoodsItem[]
 }

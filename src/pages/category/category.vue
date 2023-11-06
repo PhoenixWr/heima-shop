@@ -5,6 +5,8 @@ import type { BannerItem } from '@/types/home'
 import type { CategoryTopItem } from '@/types/category'
 import { getHomeBannerApi } from '@/services/home'
 import { getCategoryTopApi } from '@/services/category'
+// 导入组件
+import PageSkeleton from './components/PageSkeleton.vue'
 
 const bannerList = ref<BannerItem[]>([]) // 轮播图列表
 /** 获取轮播图列表数据 */
@@ -26,15 +28,19 @@ const subCategoryList = computed(() => {
   return categoryList.value[activeIndex.value]?.children || []
 })
 
+// 页面加载状态 控制骨架屏是否展示
+const isLoading = ref(false)
 // 监听页面加载
-onLoad(() => {
-  getBannerList()
-  getCategoryList()
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getBannerList(), getCategoryList()])
+  isLoading.value = false
 })
 </script>
 
 <template>
-  <view class="viewport">
+  <PageSkeleton v-if="isLoading" />
+  <view v-else class="viewport">
     <!-- 搜索框 -->
     <view class="search">
       <view class="input">

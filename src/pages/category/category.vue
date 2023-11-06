@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem } from '@/types/home'
 import type { CategoryTopItem } from '@/types/category'
@@ -36,6 +36,15 @@ onLoad(async () => {
   await Promise.all([getBannerList(), getCategoryList()])
   isLoading.value = false
 })
+
+// 设置二级分类竖向滚动条位置
+const scrollTop = ref(0)
+// 侦听当前激活一级分类的变化，重置滚动条位置
+watch(activeIndex, () => {
+  // 每次切换一级分类，给 scrollTop 设置不同的值，防止组件属性设置不生效
+  const top = scrollTop.value ? 0 : 0.1
+  scrollTop.value = top
+})
 </script>
 
 <template>
@@ -62,7 +71,7 @@ onLoad(async () => {
         </view>
       </scroll-view>
       <!-- 右侧：二级分类 -->
-      <scroll-view class="secondary" scroll-y>
+      <scroll-view class="secondary" scroll-y :scroll-top="scrollTop" enable-back-to-top>
         <!-- 焦点图 -->
         <XtxSwiper class="banner" :list="bannerList" />
         <!-- 内容区域 -->

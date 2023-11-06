@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { onLoad } from '@dcloudio/uni-app'
+import { getGoodsByIdApi } from '@/services/goods'
+
 // 获取屏幕边界到安全区域的距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -6,6 +9,17 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
 const query = defineProps<{
   id: string
 }>()
+
+/** 获取商品详情数据 */
+const getGoodsData = async () => {
+  const res = await getGoodsByIdApi(query.id)
+  console.log(res)
+}
+
+// 监听页面加载
+onLoad(() => {
+  getGoodsData()
+})
 </script>
 
 <template>

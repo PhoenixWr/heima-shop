@@ -112,6 +112,11 @@
       {
         "name": "category",
         "path": "pages/category/category"
+      },
+      {
+        "name": "goods",
+        "path": "pages/goods/goods",
+        "query": "id=3494007"
       }
     ]
   }

@@ -225,7 +225,7 @@ page {
         height: 150rpx;
       }
       .name {
-        padding: 5rpx;
+        margin: 5rpx;
         font-size: 22rpx;
         color: #333;
       }

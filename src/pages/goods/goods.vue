@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { GoodsResult } from '@/types/goods'
 import { getGoodsByIdApi } from '@/services/goods'
+// 导入组件
+import AddressPanel from './components/AddressPanel.vue'
+import ServicePanel from './components/ServicePanel.vue'
 
 // 获取屏幕边界到安全区域的距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -37,6 +40,16 @@ const onTapImage = (index: number) => {
     current: index,
     urls: goods.value!.mainPictures,
   })
+}
+
+// 弹出层组件实例
+const uniPopupRef = ref<UniHelper.UniPopupInstance | null>(null)
+// 弹出层打开方式(用于条件渲染)
+const openMode = ref<'address' | 'service'>()
+// 打开弹出层
+const openPopup = (mode: NonNullable<typeof openMode.value>) => {
+  openMode.value = mode
+  uniPopupRef.value?.open!()
 }
 </script>
 
@@ -74,11 +87,11 @@ const onTapImage = (index: number) => {
           <text class="label">选择</text>
           <text class="text ellipsis">请选择商品规格</text>
         </view>
-        <view class="item arrow">
+        <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
           <text class="text ellipsis">请选择收获地址</text>
         </view>
-        <view class="item arrow">
+        <view class="item arrow" @tap="openPopup('service')">
           <text class="label">服务</text>
           <text class="text ellipsis">无忧退 快速退款 免费包邮</text>
         </view>
@@ -148,6 +161,12 @@ const onTapImage = (index: number) => {
       <view class="buynow">立即购买</view>
     </view>
   </view>
+
+  <!-- 弹出层 -->
+  <uni-popup ref="uniPopupRef" type="bottom">
+    <AddressPanel v-if="openMode === 'address'" @close="uniPopupRef?.close" />
+    <ServicePanel v-else-if="openMode === 'service'" @close="uniPopupRef?.close" />
+  </uni-popup>
 </template>
 
 <style lang="scss">

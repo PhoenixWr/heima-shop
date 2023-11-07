@@ -6,6 +6,7 @@ import { getGoodsByIdApi } from '@/services/goods'
 // 导入组件
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 获取屏幕边界到安全区域的距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -22,9 +23,12 @@ const getGoodsData = async () => {
   goods.value = res.result
 }
 
+// 页面加载状态 控制骨架屏是否展示
+const isLoading = ref(true)
 // 监听页面加载
-onLoad(() => {
-  getGoodsData()
+onLoad(async () => {
+  await getGoodsData()
+  isLoading.value = false
 })
 
 // 轮播图当前所在滑块的下标
@@ -54,7 +58,7 @@ const openPopup = (mode: NonNullable<typeof openMode.value>) => {
 </script>
 
 <template>
-  <scroll-view scroll-y class="viewport">
+  <scroll-view v-if="!isLoading" scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
       <!-- 商品主图 -->
@@ -67,7 +71,7 @@ const openPopup = (mode: NonNullable<typeof openMode.value>) => {
         <view class="indicator">
           <text class="current">{{ current + 1 }}</text>
           <text class="split">/</text>
-          <text class="total">{{ goods?.mainPictures.length || 5 }}</text>
+          <text class="total">{{ goods?.mainPictures.length }}</text>
         </view>
       </view>
 
@@ -144,6 +148,8 @@ const openPopup = (mode: NonNullable<typeof openMode.value>) => {
       </view>
     </view>
   </scroll-view>
+  <!-- 骨架屏 -->
+  <PageSkeleton v-else />
 
   <!-- 用户操作 -->
   <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">

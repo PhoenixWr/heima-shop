@@ -1,7 +1,43 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { postLoginWxMinSimpleApi } from '@/services/login'
+// #ifdef H5
+import { postLoginApi } from '@/services/login'
+// #endif
+// #ifdef MP
 import { onLoad } from '@dcloudio/uni-app'
-import { postLoginWxMinApi, postLoginWxMinSimpleApi } from '@/services/login'
+import { postLoginWxMinApi } from '@/services/login'
+// #endif
 
+// 登录按钮加载状态
+const isLoading = ref(false)
+// #ifdef H5
+const account = ref('') // 账号
+const password = ref('') // 密码
+// 网页端登录
+const login = async () => {
+  const trimAccount = account.value.trim()
+  const trimPassword = password.value.trim()
+  if (!trimAccount || !trimPassword) {
+    return uni.showToast({ icon: 'none', title: '请输入用户名和密码' })
+  }
+  if (trimPassword.length < 6 || trimPassword.length > 20) {
+    return uni.showToast({ icon: 'none', title: '密码长度在 6-20 位之间' })
+  }
+  try {
+    isLoading.value = true
+    const res = await postLoginApi(trimAccount, trimPassword)
+    isLoading.value = false
+    // TODO 存储用户信息
+    console.log(res) // test
+    uni.showToast({ icon: 'none', title: '登录成功' })
+  } catch (error) {
+    isLoading.value = false
+  }
+}
+// #endif
+
+// #ifdef MP
 // 获取用户登录凭证
 let code = '' // 用户登录凭证
 onLoad(async () => {
@@ -14,16 +50,23 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (event) => {
   if (event.detail.errMsg) {
     return uni.showToast({ icon: 'none', title: '登录失败' })
   }
-  // 调用小程序登录接口
-  const res = await postLoginWxMinApi({
-    code,
-    encryptedData: event.detail.encryptedData!,
-    iv: event.detail.iv!,
-  })
-  // TODO 存储用户信息
-  console.log(res) // test
-  uni.showToast({ icon: 'none', title: '登录成功' })
+  try {
+    isLoading.value = true
+    // 调用小程序登录接口
+    const res = await postLoginWxMinApi({
+      code,
+      encryptedData: event.detail.encryptedData!,
+      iv: event.detail.iv!,
+    })
+    isLoading.value = false
+    // TODO 存储用户信息
+    console.log(res) // test
+    uni.showToast({ icon: 'none', title: '登录成功' })
+  } catch (error) {
+    isLoading.value = false
+  }
 }
+// #endif
 
 // 模拟手机号快捷登录(开发测试)
 const onGetPhoneNumberSimple = async () => {
@@ -42,16 +85,38 @@ const onGetPhoneNumberSimple = async () => {
       ></image>
     </view>
     <view class="login">
+      <!-- #ifdef H5 -->
       <!-- 网页端表单登录 -->
-      <!-- <input class="input" type="text" placeholder="请输入用户名/手机号码" /> -->
-      <!-- <input class="input" type="text" password placeholder="请输入密码" /> -->
-      <!-- <button class="button phone">登录</button> -->
+      <input
+        v-model="account"
+        class="input"
+        type="text"
+        :maxlength="11"
+        placeholder="请输入用户名/手机号码"
+      />
+      <input
+        v-model="password"
+        class="input"
+        type="text"
+        :maxlength="20"
+        password
+        placeholder="请输入密码"
+      />
+      <button class="button phone" :loading="isLoading" @tap="login">登录</button>
+      <!-- #endif -->
 
+      <!-- #ifdef MP -->
       <!-- 小程序端授权登录 -->
-      <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber">
+      <button
+        class="button phone"
+        :loading="isLoading"
+        open-type="getPhoneNumber"
+        @getphonenumber="onGetPhoneNumber"
+      >
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>
+      <!-- #endif -->
       <view class="extra">
         <view class="caption">
           <text>其他登录方式</text>
@@ -156,6 +221,11 @@ page {
       button {
         padding: 0;
         background-color: transparent;
+        /* #ifdef H5 */
+        &::after {
+          border: none;
+        }
+        /* #endif */
       }
     }
 

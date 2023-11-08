@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /** 小程序登录参数类型 */
-export type LoginParams = {
+export type MPLoginParams = {
   /** 用户登录凭证(有效期5分钟) */
   code: string
   /** 包括敏感数据在内的完整用户信息的加密数据 */
@@ -10,11 +10,19 @@ export type LoginParams = {
   iv: string
 }
 
+/** 网页端登录参数类型 */
+type H5LoginParams = {
+  /** 用户名或手机号 */
+  account: string
+  /** 密码 */
+  password: string
+}
+
 /**
  * 小程序登录
- * @param data 小程序登录请求体参数
+ * @param data 小程序登录参数
  */
-export const postLoginWxMinApi = (data: LoginParams) =>
+export const postLoginWxMinApi = (data: MPLoginParams) =>
   request({
     method: 'POST',
     url: '/login/wxMin',
@@ -30,4 +38,15 @@ export const postLoginWxMinSimpleApi = (phoneNumber: string) =>
     method: 'POST',
     url: '/login/wxMin/simple',
     data: { phoneNumber },
+  })
+
+/**
+ * 传统登录-用户名+密码
+ * @param data 网页端登录参数
+ */
+export const postLoginApi = (data: H5LoginParams) =>
+  request({
+    method: 'POST',
+    url: '/login',
+    data,
   })

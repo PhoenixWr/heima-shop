@@ -1,5 +1,31 @@
 <script setup lang="ts">
-//
+import { onLoad } from '@dcloudio/uni-app'
+import { postLoginWxMinApi } from '@/services/login'
+
+// 获取用户登录凭证
+let code = '' // 用户登录凭证
+onLoad(async () => {
+  const res = await uni.login()
+  code = res.code
+})
+
+// 获取用户手机号回调
+const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (event) => {
+  if (event.detail.errMsg) {
+    return uni.showToast({ icon: 'error', title: '登录失败' })
+  }
+  // 调用小程序登录接口
+  const res = await postLoginWxMinApi({
+    code,
+    encryptedData: event.detail.encryptedData!,
+    iv: event.detail.iv!,
+  })
+
+  // TODO 存储用户信息
+  console.log(res) // test
+
+  uni.showToast({ icon: 'success', title: '登录成功' })
+}
 </script>
 
 <template>
@@ -16,7 +42,7 @@
       <!-- <button class="button phone">登录</button> -->
 
       <!-- 小程序端授权登录 -->
-      <button class="button phone">
+      <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber">
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>

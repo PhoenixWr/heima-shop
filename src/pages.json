@@ -117,6 +117,10 @@
         "name": "goods",
         "path": "pages/goods/goods",
         "query": "id=4000102"
+      },
+      {
+        "name": "login",
+        "path": "pages/login/login"
       }
     ]
   }

@@ -1,0 +1,25 @@
+/* 分类标题 */
+.caption {
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+  padding: 36rpx 0 40rpx;
+  font-size: 32rpx;
+  color: #262626;
+  .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 28rpx 0 30rpx;
+
+    &::before,
+    &::after {
+      content: '';
+      width: 20rpx;
+      height: 20rpx;
+      background-image: url(@/static/images/bubble.png);
+      background-size: contain;
+      margin: 0 10rpx;
+    }
+  }
+}

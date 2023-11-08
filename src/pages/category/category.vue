@@ -113,7 +113,7 @@ page {
   flex-direction: column;
 }
 .search {
-  padding: 0 30rpx 20rpx;
+  padding: 20rpx 30rpx;
   background-color: #fff;
   .input {
     display: flex;
@@ -216,11 +216,11 @@ page {
     padding: 20rpx 0;
     .goods {
       width: 150rpx;
-      margin: 0rpx 30rpx 20rpx 0;
+      margin: 0rpx 20rpx 20rpx 0;
       &:nth-child(3n) {
         margin-right: 0;
       }
-      image {
+      .image {
         width: 150rpx;
         height: 150rpx;
       }

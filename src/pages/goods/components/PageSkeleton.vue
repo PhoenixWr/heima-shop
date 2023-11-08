@@ -12,7 +12,7 @@
                 transform: translate(0%, 0px) translateZ(0px);
               "
             >
-              <image mode="aspectFill" class="sk-image"></image>
+              <image mode="aspectFill" class="image sk-image"></image>
             </swiper-item>
           </swiper>
           <view class="indicator">
@@ -71,6 +71,11 @@
 </template>
 
 <style>
+/* #ifdef H5 || APP-PLUS */
+/* 修复 H5 端骨架屏样式异常 */
+@import url('../styles/goods.scss');
+/* #endif */
+
 .sk-transparent {
   color: transparent !important;
 }

@@ -43,6 +43,9 @@ const onTapImage = (index: number) => {
   uni.previewImage({
     current: index,
     urls: goods.value!.mainPictures,
+    // #ifdef APP-PLUS
+    loop: true,
+    // #endif
   })
 }
 
@@ -65,7 +68,7 @@ const openPopup = (mode: NonNullable<typeof openMode.value>) => {
       <view class="preview">
         <swiper circular @change="onChange">
           <swiper-item v-for="(item, index) in goods?.mainPictures" :key="item">
-            <image mode="aspectFill" :src="item" @tap="onTapImage(index)" />
+            <image class="image" mode="aspectFill" :src="item" @tap="onTapImage(index)" />
           </swiper-item>
         </swiper>
         <view class="indicator">
@@ -119,6 +122,7 @@ const openPopup = (mode: NonNullable<typeof openMode.value>) => {
         <image
           v-for="item in goods?.details.pictures"
           :key="item"
+          class="image"
           :src="item"
           mode="widthFix"
         ></image>

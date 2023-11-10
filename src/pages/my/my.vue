@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useMemberStore } from '@/stores'
+
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 订单选项
@@ -8,6 +11,13 @@ const orderTypes = [
   { type: 3, text: '待收货', icon: 'icon-check' },
   { type: 4, text: '待评价', icon: 'icon-comment' },
 ]
+
+// 获取会员信息
+const { profile, isLogin } = storeToRefs(useMemberStore())
+// 跳转到登录页
+const toLogin = () => {
+  uni.navigateTo({ url: '/pages/login/login' })
+}
 </script>
 
 <template>
@@ -15,16 +25,12 @@ const orderTypes = [
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->
-      <view class="overview" v-if="false">
+      <view class="overview" v-if="isLogin">
         <navigator url="/pagesMember/profile/profile" hover-class="none">
-          <image
-            class="avatar"
-            mode="aspectFill"
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/avatar_3.jpg"
-          ></image>
+          <image class="avatar" mode="aspectFill" :src="profile!.avatar"></image>
         </navigator>
         <view class="meta">
-          <view class="nickname"> 黑马程序员 </view>
+          <view class="nickname">{{ profile!.nickname || profile!.account }}</view>
           <navigator class="extra" url="/pagesMember/profile/profile" hover-class="none">
             <text class="update">更新头像昵称</text>
           </navigator>
@@ -44,7 +50,7 @@ const orderTypes = [
             未登录
           </navigator>
           <view class="extra">
-            <text class="tips">点击登录账号</text>
+            <text class="tips" @tap="toLogin">点击登录账号</text>
           </view>
         </view>
       </view>

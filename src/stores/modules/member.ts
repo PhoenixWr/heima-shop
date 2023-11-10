@@ -1,29 +1,33 @@
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import type { LoginResult } from '@/types/member'
 
-// 定义 Store
 export const useMemberStore = defineStore(
   'member',
   () => {
     // 会员信息
-    const profile = ref<any>()
+    const profile = ref<LoginResult>()
 
-    // 保存会员信息，登录时使用
-    const setProfile = (val: any) => {
-      profile.value = val
+    // 登录凭证
+    const token = computed(() => profile.value?.token)
+    // 登录状态
+    const isLogin = computed(() => !!token.value)
+
+    /**
+     * 保存会员信息 - 用户登录
+     * @param value 会员信息
+     */
+    const setProfile = (value: LoginResult) => {
+      profile.value = value
     }
-
-    // 清理会员信息，退出时使用
+    /**
+     * 清除会员信息 - 用户退出
+     */
     const clearProfile = () => {
       profile.value = undefined
     }
 
-    // 记得 return
-    return {
-      profile,
-      setProfile,
-      clearProfile,
-    }
+    return { profile, token, isLogin, setProfile, clearProfile }
   },
   {
     persist: true,

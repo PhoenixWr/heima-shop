@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 
 // 获取手机状态栏高度
-const { statusBarHeight } = uni.getSystemInfoSync()
+const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
 // 自定义导航栏顶部内边距 适配不同机型状态栏
 const navBarPaddingTop = computed(() => {
-  if (!statusBarHeight) return '20px'
-  return `${statusBarHeight}px`
+  if (safeAreaInsets!.top) return `${safeAreaInsets!.top}px`
+  if (statusBarHeight) return `${statusBarHeight}px`
+  return '20px'
 })
 </script>
 

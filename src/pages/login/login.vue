@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useMemberStore } from '@/stores'
+import type { LoginResult } from '@/types/member'
 import { postLoginWxMinSimpleApi } from '@/services/login'
 // #ifdef H5
 import { postLoginApi } from '@/services/login'
@@ -15,7 +17,7 @@ const isLoading = ref(false)
 const account = ref('') // 账号
 const password = ref('') // 密码
 // 网页端登录
-const login = async () => {
+const h5Login = async () => {
   const trimAccount = account.value.trim()
   const trimPassword = password.value.trim()
   if (!trimAccount || !trimPassword) {
@@ -30,7 +32,7 @@ const login = async () => {
     isLoading.value = false
     // TODO 存储用户信息
     console.log(res) // test
-    uni.showToast({ icon: 'none', title: '登录成功' })
+    uni.showToast({ icon: 'success', title: '登录成功' })
   } catch (error) {
     isLoading.value = false
   }
@@ -45,10 +47,10 @@ onLoad(async () => {
   code = res.code
 })
 
-// 获取用户手机号回调
-const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (event) => {
+// 小程序端授权登录
+const mpLogin: UniHelper.ButtonOnGetphonenumber = async (event) => {
   if (event.detail.errMsg) {
-    return uni.showToast({ icon: 'none', title: '登录失败' })
+    return uni.showToast({ icon: 'error', title: '登录失败' })
   }
   try {
     isLoading.value = true
@@ -59,9 +61,7 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (event) => {
       iv: event.detail.iv!,
     })
     isLoading.value = false
-    // TODO 存储用户信息
-    console.log(res) // test
-    uni.showToast({ icon: 'none', title: '登录成功' })
+    loginSuccess(res.result)
   } catch (error) {
     isLoading.value = false
   }
@@ -69,11 +69,22 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (event) => {
 // #endif
 
 // 模拟手机号快捷登录(开发测试)
-const onGetPhoneNumberSimple = async () => {
+const mpLoginSimple = async () => {
   const res = await postLoginWxMinSimpleApi('13592028823')
-  // TODO 存储用户信息
-  console.log(res) // test
-  uni.showToast({ icon: 'none', title: '登录成功' })
+  loginSuccess(res.result)
+}
+
+// 通用登录成功后业务处理函数
+const loginSuccess = (profile: LoginResult) => {
+  // 存储用户信息
+  const { setProfile } = useMemberStore()
+  setProfile(profile)
+  // 登录成功提示
+  uni.showToast({ icon: 'success', title: '登录成功' })
+  setTimeout(() => {
+    // 页面跳转
+    uni.switchTab({ url: '/pages/my/my' })
+  }, 500)
 }
 </script>
 
@@ -102,7 +113,7 @@ const onGetPhoneNumberSimple = async () => {
         password
         placeholder="请输入密码"
       />
-      <button class="button phone" :loading="isLoading" @tap="login">登录</button>
+      <button class="button phone" :loading="isLoading" @tap="h5Login">登录</button>
       <!-- #endif -->
 
       <!-- #ifdef MP -->
@@ -111,7 +122,7 @@ const onGetPhoneNumberSimple = async () => {
         class="button phone"
         :loading="isLoading"
         open-type="getPhoneNumber"
-        @getphonenumber="onGetPhoneNumber"
+        @getphonenumber="mpLogin"
       >
         <text class="icon icon-phone"></text>
         手机号快捷登录
@@ -123,7 +134,7 @@ const onGetPhoneNumberSimple = async () => {
         </view>
         <view class="options">
           <!-- 通用模拟登录 -->
-          <button @tap="onGetPhoneNumberSimple">
+          <button @tap="mpLoginSimple">
             <text class="icon icon-phone">模拟快捷登录</text>
           </button>
         </view>

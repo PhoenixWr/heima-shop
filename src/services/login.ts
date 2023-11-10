@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import type { LoginResult } from '@/types/member'
 
 /** 小程序登录参数类型 */
 export type LoginParams = {
@@ -15,7 +16,7 @@ export type LoginParams = {
  * @param data 小程序登录参数
  */
 export const postLoginWxMinApi = (data: LoginParams) =>
-  request({
+  request<LoginResult>({
     method: 'POST',
     url: '/login/wxMin',
     data,
@@ -26,7 +27,7 @@ export const postLoginWxMinApi = (data: LoginParams) =>
  * @param phoneNumber 模拟手机号码
  */
 export const postLoginWxMinSimpleApi = (phoneNumber: string) =>
-  request({
+  request<LoginResult>({
     method: 'POST',
     url: '/login/wxMin/simple',
     data: { phoneNumber },

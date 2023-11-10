@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onUnload } from '@dcloudio/uni-app'
 import { useMemberStore } from '@/stores'
 import type { LoginResult } from '@/types/member'
 import { postLoginWxMinSimpleApi } from '@/services/login'
@@ -74,6 +75,7 @@ const mpLoginSimple = async () => {
   loginSuccess(res.result)
 }
 
+let timer: number | null = null // 定时器id
 // 通用登录成功后业务处理函数
 const loginSuccess = (profile: LoginResult) => {
   // 存储用户信息
@@ -81,11 +83,16 @@ const loginSuccess = (profile: LoginResult) => {
   setProfile(profile)
   // 登录成功提示
   uni.showToast({ icon: 'success', title: '登录成功' })
-  setTimeout(() => {
+  timer = setTimeout(() => {
     // 页面跳转
     uni.switchTab({ url: '/pages/my/my' })
   }, 500)
 }
+
+// 监听页面卸载
+onUnload(() => {
+  timer && clearTimeout(timer)
+})
 </script>
 
 <template>

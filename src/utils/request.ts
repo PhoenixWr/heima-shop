@@ -1,3 +1,5 @@
+import { useMemberStore } from '@/stores'
+
 // 请求基地址
 const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
 
@@ -16,7 +18,11 @@ const interceptorOptions: UniApp.InterceptorOptions = {
       ...options.header,
       'source-client': 'miniapp',
     }
-    // TODO 添加token请求头标识
+    // 添加 token 请求头标识
+    const memberStore = useMemberStore()
+    if (memberStore.token) {
+      options.header.Authorization = memberStore.token
+    }
   },
 } // 普通网络请求和文件上传共用的拦截器配置
 uni.addInterceptor('request', interceptorOptions)
@@ -39,7 +45,10 @@ const request = <T>(options: UniApp.RequestOptions) =>
         if (response.statusCode >= 200 && response.statusCode < 300) {
           resolve(response.data as Data<T>) // 类型断言指定具体类型
         } else if (response.statusCode === 401) {
-          // TODO 401错误(token校验失败) => 清理用户信息跳转登录页
+          // 401错误(token校验失败) => 清理用户信息跳转登录页
+          const memberStore = useMemberStore()
+          memberStore.clearProfile()
+          uni.navigateTo({ url: '/pages/login/login' })
           reject(response)
         } else {
           // 通用错误 => 根据后端错误消息进行轻提示

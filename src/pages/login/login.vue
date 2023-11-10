@@ -31,9 +31,7 @@ const h5Login = async () => {
     isLoading.value = true
     const res = await postLoginApi(trimAccount, trimPassword)
     isLoading.value = false
-    // TODO 存储用户信息
-    console.log(res) // test
-    uni.showToast({ icon: 'success', title: '登录成功' })
+    loginSuccess(res.result)
   } catch (error) {
     isLoading.value = false
   }

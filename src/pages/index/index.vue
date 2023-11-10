@@ -43,7 +43,7 @@ onLoad(async () => {
 // 猜你喜欢组件实例
 const xtxGuessRef = ref<XtxGuessInstance | null>(null)
 // scroll-view 滚动到底部/右边时触发
-const OnScrollToLower = () => {
+const onScrollToLower = () => {
   xtxGuessRef.value?.getGuessList()
 }
 
@@ -72,7 +72,7 @@ const onRefresherRefresh = async () => {
     scroll-y
     refresher-enabled
     :refresher-triggered="isTriggered"
-    @scrolltolower="OnScrollToLower"
+    @scrolltolower="onScrollToLower"
     @refresherrefresh="onRefresherRefresh"
   >
     <!-- 骨架屏 -->

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { LoginResult } from '@/types/member'
+import type { LoginResult, H5LoginResult } from '@/types/member'
 
 /** 小程序登录参数类型 */
 export type LoginParams = {
@@ -39,7 +39,7 @@ export const postLoginWxMinSimpleApi = (phoneNumber: string) =>
  * @param password 密码
  */
 export const postLoginApi = (account: string, password: string) =>
-  request({
+  request<H5LoginResult>({
     method: 'POST',
     url: '/login',
     data: { account, password },

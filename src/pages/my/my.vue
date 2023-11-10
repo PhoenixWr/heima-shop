@@ -1,9 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores'
 
 // 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
+const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
+// 个人资料顶部内边距
+const paddingTop = computed(() => {
+  if (safeAreaInsets!.top) return `${safeAreaInsets!.top}px`
+  if (statusBarHeight) return `${statusBarHeight}px`
+  return '20px'
+})
+
 // 订单选项
 const orderTypes = [
   { type: 1, text: '待付款', icon: 'icon-currency' },
@@ -23,7 +31,7 @@ const toLogin = () => {
 <template>
   <scroll-view class="viewport" scroll-y enable-back-to-top>
     <!-- 个人资料 -->
-    <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
+    <view class="profile" :style="{ paddingTop: paddingTop }">
       <!-- 情况1：已登录 -->
       <view class="overview" v-if="isLogin">
         <navigator url="/pagesMember/profile/profile" hover-class="none">

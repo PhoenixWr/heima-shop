@@ -17,6 +17,8 @@ pinia.use(
         uni.setStorageSync(key, value)
       },
     },
+    // 仓库存储键名添加统一前缀
+    key: (id) => `xtx_${id}`,
   }),
 )
 

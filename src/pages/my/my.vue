@@ -91,7 +91,7 @@ const { xtxGuessRef, onScrollToLower } = useScrollToLoad()
           {{ item.text }}
         </navigator>
         <!-- 客服 -->
-        <button class="contact icon-handset" open-type="contact">售后</button>
+        <button class="button contact icon-handset" open-type="contact">售后</button>
       </view>
     </view>
     <!-- 猜你喜欢 -->

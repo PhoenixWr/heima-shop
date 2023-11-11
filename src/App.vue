@@ -40,6 +40,10 @@ image {
   vertical-align: middle;
 }
 
+.button::after {
+  border: none;
+}
+
 // 两行省略
 .ellipsis {
   overflow: hidden;

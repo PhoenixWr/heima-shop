@@ -1,11 +1,31 @@
 <script setup lang="ts">
-//
+import { storeToRefs } from 'pinia'
+import { useMemberStore } from '@/stores'
+
+const memberStore = useMemberStore()
+const { isLogin } = storeToRefs(memberStore)
+// 退出登录
+const logout = async () => {
+  // 显示模态弹窗
+  const res = await uni.showModal({
+    content: '确认要退出吗',
+    confirmText: '确认',
+    confirmColor: '#e64340',
+  })
+  // 用户点击确认
+  if (res.confirm) {
+    // 清除用户信息
+    memberStore.clearProfile()
+    // 返回上一页
+    uni.navigateBack()
+  }
+}
 </script>
 
 <template>
   <view class="viewport">
     <!-- 列表1 -->
-    <view class="list" v-if="true">
+    <view v-if="isLogin" class="list">
       <navigator url="/pagesMember/address/address" hover-class="none" class="item arrow">
         我的收货地址
       </navigator>
@@ -21,8 +41,8 @@
       <navigator hover-class="none" class="item arrow" url=" ">关于小兔鲜儿</navigator>
     </view>
     <!-- 操作按钮 -->
-    <view class="action">
-      <view class="button">退出登录</view>
+    <view v-if="isLogin" class="action">
+      <button class="button" type="warn" hover-class="none" @tap="logout">退出登录</button>
     </view>
   </view>
 </template>
@@ -84,9 +104,7 @@ page {
   font-size: 32rpx;
   color: #333;
   .button {
-    background-color: #fff;
-    margin-bottom: 20rpx;
-    border-radius: 10rpx;
+    font-size: 32rpx;
   }
 }
 </style>

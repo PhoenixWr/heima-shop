@@ -123,6 +123,10 @@
       {
         "name": "login",
         "path": "pages/login/login"
+      },
+      {
+        "name": "settings",
+        "path": "pagesMember/settings/settings"
       }
     ]
   },

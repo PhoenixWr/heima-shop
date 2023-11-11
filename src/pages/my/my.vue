@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores'
+import { useScrollToLoad } from '@/composables'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
@@ -26,10 +27,13 @@ const { profile, isLogin } = storeToRefs(useMemberStore())
 const toLogin = () => {
   uni.navigateTo({ url: '/pages/login/login' })
 }
+
+// 猜你喜欢组件滚动触底加载分页数据
+const { xtxGuessRef, onScrollToLower } = useScrollToLoad()
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top>
+  <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="onScrollToLower">
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: paddingTop }">
       <!-- 情况1：已登录 -->
@@ -92,7 +96,7 @@ const toLogin = () => {
     </view>
     <!-- 猜你喜欢 -->
     <view class="guess">
-      <XtxGuess ref="guessRef" />
+      <XtxGuess ref="xtxGuessRef" />
     </view>
   </scroll-view>
 </template>

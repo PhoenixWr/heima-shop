@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
-import type { XtxGuessInstance } from '@/types/components'
 import { getHomeBannerApi, getHomeCategoryApi, getHomeHotApi } from '@/services/home'
+import { useScrollToLoad } from '@/composables'
 // 导入组件
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
@@ -40,12 +40,8 @@ onLoad(async () => {
   isLoading.value = false
 })
 
-// 猜你喜欢组件实例
-const xtxGuessRef = ref<XtxGuessInstance | null>(null)
-// scroll-view 滚动到底部/右边时触发
-const onScrollToLower = () => {
-  xtxGuessRef.value?.getGuessList()
-}
+// 猜你喜欢组件滚动触底加载分页数据
+const { xtxGuessRef, onScrollToLower } = useScrollToLoad()
 
 // 当前自定义下拉刷新状态
 const isTriggered = ref(false)

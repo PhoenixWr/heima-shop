@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores'
-import { useScrollToLoad } from '@/composables'
+import { useScrollToLoad, useNavBarAdaptive } from '@/composables'
 
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
-// 个人资料顶部内边距
-const paddingTop = computed(() => {
-  if (safeAreaInsets!.top) return `${safeAreaInsets!.top}px`
-  if (statusBarHeight) return `${statusBarHeight}px`
-  return '20px'
-})
+// 自定义导航栏安全区域自适应处理
+const { paddingTop } = useNavBarAdaptive()
 
 // 订单选项
 const orderTypes = [

@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { useNavBarAdaptive } from '@/composables'
 
-// 获取手机状态栏高度
-const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
-// 自定义导航栏顶部内边距 适配不同机型状态栏
-const navBarPaddingTop = computed(() => {
-  if (safeAreaInsets!.top) return `${safeAreaInsets!.top}px`
-  if (statusBarHeight) return `${statusBarHeight}px`
-  return '20px'
-})
+// 自定义导航栏安全区域自适应处理
+const { paddingTop } = useNavBarAdaptive()
 </script>
 
 <template>
-  <view class="navbar" :style="{ paddingTop: navBarPaddingTop }">
+  <view class="navbar" :style="{ paddingTop: paddingTop }">
     <!-- logo文字 -->
     <view class="logo">
       <image class="logo-image" src="@/static/images/logo.png"></image>

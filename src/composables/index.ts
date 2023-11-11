@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { XtxGuessInstance } from '@/types/components'
 
 /**
@@ -15,5 +15,23 @@ export const useScrollToLoad = () => {
   return {
     xtxGuessRef,
     onScrollToLower,
+  }
+}
+
+/**
+ * 自定义导航栏自适应安全区域组合式函数
+ */
+export const useNavBarAdaptive = () => {
+  // 获取屏幕边界到安全区域距离 手机状态栏高度
+  const { safeAreaInsets, statusBarHeight } = uni.getSystemInfoSync()
+  // 自定义导航栏顶部内边距 适配不同机型
+  const paddingTop = computed(() => {
+    if (safeAreaInsets!.top) return `${safeAreaInsets!.top}px`
+    if (statusBarHeight) return `${statusBarHeight}px`
+    return '20px'
+  })
+
+  return {
+    paddingTop,
   }
 }

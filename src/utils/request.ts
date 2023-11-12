@@ -1,4 +1,5 @@
 import { useMemberStore } from '@/stores'
+import type { Data } from '@/types/global'
 
 // 请求基地址
 const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
@@ -28,12 +29,6 @@ const interceptorOptions: UniApp.InterceptorOptions = {
 uni.addInterceptor('request', interceptorOptions)
 uni.addInterceptor('uploadFile', interceptorOptions)
 
-// 后端返回数据通用接口
-interface Data<T> {
-  code: string
-  msg: string
-  result: T
-}
 // 封装请求函数
 const request = <T>(options: UniApp.RequestOptions) =>
   new Promise<Data<T>>((resolve, reject) => {

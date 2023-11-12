@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import type { Data } from '@/types/global'
 import type { ProfileDetail } from '@/types/member'
 import { getMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
@@ -19,6 +20,30 @@ const getMemberProfileData = async () => {
 onLoad(() => {
   getMemberProfileData()
 })
+
+// 修改头像
+const modifyAvatar = () => {
+  uni.chooseMedia({
+    count: 1, // 最多可以选择的文件个数
+    mediaType: ['image'], // 文件类型
+    success: async (res) => {
+      // 本地临时文件路径
+      const { tempFilePath } = res.tempFiles[0]
+      const response = await uni.uploadFile({
+        url: '/member/profile/avatar',
+        name: 'file',
+        filePath: tempFilePath,
+      })
+      if (response.statusCode !== 200) {
+        return uni.showToast({ icon: 'error', title: '更新失败' })
+      }
+      const data: Data<{ avatar: string }> = JSON.parse(response.data)
+      const avatar = data.result.avatar // 服务器返回头像信息
+      profile.value!.avatar = avatar
+      uni.showToast({ icon: 'success', title: '更新成功' })
+    },
+  })
+}
 </script>
 
 <template>
@@ -30,7 +55,7 @@ onLoad(() => {
     </view>
     <!-- 头像 -->
     <view class="avatar">
-      <view class="avatar-content">
+      <view class="avatar-content" @tap="modifyAvatar">
         <image class="image" :src="profile?.avatar" mode="aspectFill" />
         <text class="text">点击修改头像</text>
       </view>

@@ -1,3 +1,10 @@
+/** 后端返回数据通用接口 */
+export interface Data<T> {
+  code: string
+  msg: string
+  result: T
+}
+
 /** 通用分页结果类型 */
 export type PageResult<T> = {
   /** 总条数 */

@@ -127,6 +127,10 @@
       {
         "name": "settings",
         "path": "pagesMember/settings/settings"
+      },
+      {
+        "name": "profile",
+        "path": "pagesMember/profile/profile"
       }
     ]
   },
@@ -140,6 +144,14 @@
           "path": "settings/settings",
           "style": {
             "navigationBarTitleText": "设置"
+          }
+        },
+        {
+          "path": "profile/profile",
+          "style": {
+            "navigationBarTextStyle": "white",
+            "navigationBarTitleText": "个人信息",
+            "navigationStyle": "custom"
           }
         }
       ]

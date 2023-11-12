@@ -5,7 +5,7 @@ export type BaseProfile = {
   /** 头像 */
   avatar: string
   /** 昵称 */
-  nickname: string | null
+  nickname?: string
   /** 账号名称 */
   account: string
 }
@@ -21,15 +21,15 @@ export type LoginResult = BaseProfile & {
 /** 网页登录用户信息 */
 export type H5LoginResult = LoginResult & {
   /** 性别 */
-  gender: Gender | null
+  gender?: Gender
   /** 生日 */
-  birthday: string | null
+  birthday?: string
   /** 城市编码 */
-  cityCode: string | null
+  cityCode?: string
   /** 省份编码 */
-  provinceCode: string | null
+  provinceCode?: string
   /** 职业 */
-  profession: string | null
+  profession?: string
 }
 
 /** 性别 */
@@ -37,11 +37,11 @@ export type Gender = '男' | '女' | '未知'
 /** 个人信息 用户详情信息 */
 export type ProfileDetail = BaseProfile & {
   /** 性别 */
-  gender: Gender | null
+  gender?: Gender
   /** 生日 */
-  birthday: string | null
+  birthday?: string
   /** 省市区 */
   fullLocation: string
   /** 职业 */
-  profession: string | null
+  profession?: string
 }

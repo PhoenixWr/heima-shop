@@ -1,8 +1,24 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import type { ProfileDetail } from '@/types/member'
+import { getMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
 
 // 自定义导航栏安全区域自适应处理
 const { paddingTop } = useNavBarAdaptive()
+
+const profile = ref<ProfileDetail>() // 个人信息数据
+// 获取个人信息数据
+const getMemberProfileData = async () => {
+  const res = await getMemberProfileApi()
+  profile.value = res.result
+}
+
+// 监听页面加载
+onLoad(() => {
+  getMemberProfileData()
+})
 </script>
 
 <template>
@@ -15,7 +31,7 @@ const { paddingTop } = useNavBarAdaptive()
     <!-- 头像 -->
     <view class="avatar">
       <view class="avatar-content">
-        <image class="image" src=" " mode="aspectFill" />
+        <image class="image" :src="profile?.avatar" mode="aspectFill" />
         <text class="text">点击修改头像</text>
       </view>
     </view>
@@ -25,21 +41,21 @@ const { paddingTop } = useNavBarAdaptive()
       <view class="form-content">
         <view class="form-item">
           <text class="label">账号</text>
-          <text class="account">账号名</text>
+          <text class="account">{{ profile?.account }}</text>
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" value="" />
+          <input class="input" type="text" placeholder="请填写昵称" :value="profile?.nickname" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
           <radio-group>
             <label class="radio">
-              <radio value="男" color="#27ba9b" :checked="true" />
+              <radio value="男" color="#27ba9b" :checked="profile?.gender === '男'" />
               男
             </label>
             <label class="radio">
-              <radio value="女" color="#27ba9b" :checked="false" />
+              <radio value="女" color="#27ba9b" :checked="profile?.gender === '女'" />
               女
             </label>
           </radio-group>
@@ -51,22 +67,22 @@ const { paddingTop } = useNavBarAdaptive()
             mode="date"
             start="1900-01-01"
             :end="new Date()"
-            value="2000-01-01"
+            :value="profile?.birthday"
           >
-            <view v-if="false">2000-01-01</view>
+            <view v-if="profile?.birthday">{{ profile.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="['广东省', '广州市', '天河区']">
-            <view v-if="false">广东省广州市天河区</view>
+          <picker class="picker" mode="region" :value="profile?.fullLocation.split(' ')">
+            <view v-if="profile?.fullLocation">{{ profile.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
         <view class="form-item">
           <text class="label">职业</text>
-          <input class="input" type="text" placeholder="请填写职业" value="" />
+          <input class="input" type="text" placeholder="请填写职业" :value="profile?.profession" />
         </view>
       </view>
       <!-- 提交按钮 -->

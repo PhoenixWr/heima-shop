@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { onLoad } from '@dcloudio/uni-app'
 import { useMemberStore } from '@/stores'
 import { useScrollToLoad, useNavBarAdaptive } from '@/composables'
+import { getMemberProfileApi } from '@/services/profile'
 
 // 自定义导航栏安全区域自适应处理
 const { paddingTop } = useNavBarAdaptive()
@@ -14,8 +16,22 @@ const orderTypes = [
   { type: 4, text: '待评价', icon: 'icon-comment' },
 ]
 
+const memberStore = useMemberStore()
+// 更新 memberStore 仓库个人信息数据
+const updateProfile = async () => {
+  const res = await getMemberProfileApi()
+  // 更新用户头像
+  memberStore.setAvatar(res.result.avatar)
+  // 更新用户昵称
+  memberStore.setNickname(res.result.nickname!)
+}
+// 监听页面加载
+onLoad(() => {
+  updateProfile()
+})
+
 // 获取会员信息
-const { profile, isLogin } = storeToRefs(useMemberStore())
+const { profile, isLogin } = storeToRefs(memberStore)
 // 跳转到登录页
 const toLogin = () => {
   uni.navigateTo({ url: '/pages/login/login' })

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { Data } from '@/types/global'
-import type { ProfileDetail } from '@/types/member'
+import type { Gender, ProfileDetail } from '@/types/member'
 import { useMemberStore } from '@/stores'
 import { getMemberProfileApi, putMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
@@ -52,10 +52,16 @@ const modifyAvatar = () => {
   })
 }
 
+// radio-group 选中项发生变化时触发的回调函数 (修改性别)
+const onRadioGroupChange: UniHelper.RadioGroupOnChange = (event) => {
+  profile.value.gender = event.detail.value as Gender
+}
+
 // 点击保存修改个人信息
 const modifyProfile = async () => {
   const res = await putMemberProfileApi({
-    nickname: profile.value?.nickname,
+    nickname: profile.value.nickname,
+    gender: profile.value.gender,
   })
   // store个人信息昵称同步更新
   memberStore.setNickname(res.result.nickname!)
@@ -99,7 +105,7 @@ const modifyProfile = async () => {
         </view>
         <view class="form-item">
           <text class="label">性别</text>
-          <radio-group>
+          <radio-group @change="onRadioGroupChange">
             <label class="radio">
               <radio value="男" color="#27ba9b" :checked="profile?.gender === '男'" />
               男

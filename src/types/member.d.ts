@@ -33,7 +33,7 @@ export type H5LoginResult = LoginResult & {
 }
 
 /** 性别 */
-export type Gender = '男' | '女' | '未知'
+export type Gender = '男' | '女'
 /** 个人信息 用户详情信息 */
 export type ProfileDetail = BaseProfile & {
   /** 性别 */

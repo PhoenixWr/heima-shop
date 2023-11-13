@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { Data } from '@/types/global'
-import type { Gender, ProfileDetail } from '@/types/member'
+import type { Gender, ProfileDetail, ProfileParams } from '@/types/member'
 import { useMemberStore } from '@/stores'
 import { getMemberProfileApi, putMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
@@ -52,24 +52,40 @@ const modifyAvatar = () => {
   })
 }
 
-// radio-group 选中项发生变化时触发的回调函数 (修改性别)
+// 修改性别
 const onRadioGroupChange: UniHelper.RadioGroupOnChange = (event) => {
   profile.value.gender = event.detail.value as Gender
 }
 
-// 日期选择器 value 改变时触发的回调函数 (修改生日)
+// 修改生日
 const onDatePickerChange: UniHelper.DatePickerOnChange = (event) => {
   profile.value.birthday = event.detail.value
+}
+
+// 修改城市
+let regionCode: [string, string, string] | null = null // 统计用区划代码
+const onRegionPickerChange: UniHelper.RegionPickerOnChange = (event) => {
+  // 页面展示用户选择的地区信息
+  profile.value.fullLocation = event.detail.value.join(' ')
+  // 存储统计用区划代码(用于后端请求修改城市)
+  regionCode = event.detail.code!
 }
 
 // 点击保存修改个人信息
 const modifyProfile = async () => {
   const { nickname, gender, birthday } = profile.value
-  const res = await putMemberProfileApi({
+  // 修改个人信息接口请求参数
+  const params: ProfileParams = {
     nickname,
     gender,
     birthday,
-  })
+  }
+  // 用户修改城市信息时请求参数再追加相关字段
+  if (regionCode) {
+    const [provinceCode, cityCode, countyCode] = regionCode
+    Object.assign(params, { provinceCode, cityCode, countyCode })
+  }
+  const res = await putMemberProfileApi(params)
   // store个人信息昵称同步更新
   memberStore.setNickname(res.result.nickname!)
   uni.showToast({ icon: 'success', title: '保存成功' })
@@ -139,7 +155,12 @@ const modifyProfile = async () => {
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
+          <picker
+            class="picker"
+            mode="region"
+            :value="profile?.fullLocation?.split(' ')"
+            @change="onRegionPickerChange"
+          >
             <view v-if="profile?.fullLocation">{{ profile.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>

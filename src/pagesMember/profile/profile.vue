@@ -3,13 +3,15 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { Data } from '@/types/global'
 import type { ProfileDetail } from '@/types/member'
-import { getMemberProfileApi } from '@/services/profile'
+import { getMemberProfileApi, putMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
 
 // 自定义导航栏安全区域自适应处理
 const { paddingTop } = useNavBarAdaptive()
 
-const profile = ref<ProfileDetail>() // 个人信息数据
+// 注意：修改个人信息涉及双向绑定必须提供初始值
+// 使用类型断言指定空对象的类型
+const profile = ref({} as ProfileDetail) // 个人信息数据
 // 获取个人信息数据
 const getMemberProfileData = async () => {
   const res = await getMemberProfileApi()
@@ -35,14 +37,22 @@ const modifyAvatar = () => {
         filePath: tempFilePath,
       })
       if (response.statusCode !== 200) {
-        return uni.showToast({ icon: 'error', title: '更新失败' })
+        return uni.showToast({ icon: 'error', title: '头像更新失败' })
       }
       const data: Data<{ avatar: string }> = JSON.parse(response.data)
       const avatar = data.result.avatar // 服务器返回头像信息
       profile.value!.avatar = avatar
-      uni.showToast({ icon: 'success', title: '更新成功' })
+      uni.showToast({ icon: 'success', title: '头像更新成功' })
     },
   })
+}
+
+// 点击保存修改个人信息
+const modifyProfile = async () => {
+  const res = await putMemberProfileApi({
+    nickname: profile.value?.nickname,
+  })
+  console.log(res) // test
 }
 </script>
 
@@ -70,7 +80,12 @@ const modifyAvatar = () => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" :value="profile?.nickname" />
+          <input
+            v-model="profile.nickname"
+            class="input"
+            type="nickname"
+            placeholder="请填写昵称"
+          />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -100,7 +115,7 @@ const modifyAvatar = () => {
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="profile?.fullLocation.split(' ')">
+          <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
             <view v-if="profile?.fullLocation">{{ profile.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
@@ -111,7 +126,7 @@ const modifyAvatar = () => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button class="form-button" @tap="modifyProfile">保 存</button>
     </view>
   </view>
 </template>

@@ -26,8 +26,30 @@ export const useMemberStore = defineStore(
     const clearProfile = () => {
       profile.value = undefined
     }
+    /**
+     * 修改用户头像
+     * @param avatar 用户头像地址
+     */
+    const setAvatar = (avatar: string) => {
+      if (profile.value) profile.value.avatar = avatar
+    }
+    /**
+     * 修改昵称
+     * @param nickname 用户昵称
+     */
+    const setNickname = (nickname: string) => {
+      if (profile.value) profile.value.nickname = nickname
+    }
 
-    return { profile, token, isLogin, setProfile, clearProfile }
+    return {
+      profile,
+      token,
+      isLogin,
+      setProfile,
+      clearProfile,
+      setAvatar,
+      setNickname,
+    }
   },
   {
     persist: true,

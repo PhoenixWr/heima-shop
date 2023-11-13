@@ -15,7 +15,7 @@ export const getMemberProfileApi = () =>
  * @param data 请求体参数
  */
 export const putMemberProfileApi = (data: ProfileParams) =>
-  request({
+  request<ProfileDetail>({
     method: 'PUT',
     url: '/member/profile',
     data,

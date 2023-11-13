@@ -84,7 +84,7 @@ const loginSuccess = (profile: LoginResult) => {
   timer = setTimeout(() => {
     // 页面跳转
     uni.switchTab({ url: '/pages/my/my' })
-  }, 500)
+  }, 600)
 }
 
 // 监听页面卸载

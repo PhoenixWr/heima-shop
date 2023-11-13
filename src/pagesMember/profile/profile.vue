@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { Data } from '@/types/global'
 import type { ProfileDetail } from '@/types/member'
+import { useMemberStore } from '@/stores'
 import { getMemberProfileApi, putMemberProfileApi } from '@/services/profile'
 import { useNavBarAdaptive } from '@/composables'
 
@@ -23,6 +24,7 @@ onLoad(() => {
   getMemberProfileData()
 })
 
+const memberStore = useMemberStore()
 // 修改头像
 const modifyAvatar = () => {
   uni.chooseMedia({
@@ -41,7 +43,10 @@ const modifyAvatar = () => {
       }
       const data: Data<{ avatar: string }> = JSON.parse(response.data)
       const avatar = data.result.avatar // 服务器返回头像信息
+      // 个人信息页数据更新
       profile.value!.avatar = avatar
+      // store个人信息用户头像同步更新
+      memberStore.setAvatar(avatar)
       uni.showToast({ icon: 'success', title: '头像更新成功' })
     },
   })
@@ -52,7 +57,12 @@ const modifyProfile = async () => {
   const res = await putMemberProfileApi({
     nickname: profile.value?.nickname,
   })
-  console.log(res) // test
+  // store个人信息昵称同步更新
+  memberStore.setNickname(res.result.nickname!)
+  uni.showToast({ icon: 'success', title: '保存成功' })
+  setTimeout(() => {
+    uni.navigateBack()
+  }, 600)
 }
 </script>
 

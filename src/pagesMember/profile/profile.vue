@@ -57,11 +57,18 @@ const onRadioGroupChange: UniHelper.RadioGroupOnChange = (event) => {
   profile.value.gender = event.detail.value as Gender
 }
 
+// 日期选择器 value 改变时触发的回调函数 (修改生日)
+const onDatePickerChange: UniHelper.DatePickerOnChange = (event) => {
+  profile.value.birthday = event.detail.value
+}
+
 // 点击保存修改个人信息
 const modifyProfile = async () => {
+  const { nickname, gender, birthday } = profile.value
   const res = await putMemberProfileApi({
-    nickname: profile.value.nickname,
-    gender: profile.value.gender,
+    nickname,
+    gender,
+    birthday,
   })
   // store个人信息昵称同步更新
   memberStore.setNickname(res.result.nickname!)
@@ -124,6 +131,7 @@ const modifyProfile = async () => {
             start="1900-01-01"
             :end="new Date()"
             :value="profile?.birthday"
+            @change="onDatePickerChange"
           >
             <view v-if="profile?.birthday">{{ profile.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>

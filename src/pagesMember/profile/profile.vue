@@ -73,12 +73,13 @@ const onRegionPickerChange: UniHelper.RegionPickerOnChange = (event) => {
 
 // 点击保存修改个人信息
 const modifyProfile = async () => {
-  const { nickname, gender, birthday } = profile.value
+  const { nickname, gender, birthday, profession } = profile.value
   // 修改个人信息接口请求参数
   const params: ProfileParams = {
-    nickname,
+    nickname: nickname?.trim(),
     gender,
     birthday,
+    profession: profession?.trim(),
   }
   // 用户修改城市信息时请求参数再追加相关字段
   if (regionCode) {
@@ -167,7 +168,7 @@ const modifyProfile = async () => {
         </view>
         <view class="form-item">
           <text class="label">职业</text>
-          <input class="input" type="text" placeholder="请填写职业" :value="profile?.profession" />
+          <input v-model="profile.profession" class="input" type="text" placeholder="请填写职业" />
         </view>
       </view>
       <!-- 提交按钮 -->

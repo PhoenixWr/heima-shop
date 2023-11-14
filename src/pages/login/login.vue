@@ -162,19 +162,32 @@ page {
 }
 
 .logo {
+  /* #ifdef MP */
   flex: 1;
+  /* #endif */
   text-align: center;
   image {
     width: 220rpx;
     height: 220rpx;
+    /* #ifdef MP */
     margin-top: 15vh;
+    /* #endif */
+    /* #ifdef H5 || APP-PLUS */
+    margin-top: 90rpx;
+    /* #endif */
   }
 }
 
 .login {
+  /* #ifdef H5 || APP-PLUS */
+  flex: 1;
+  position: relative;
+  /* #endif */
   display: flex;
   flex-direction: column;
+  /* #ifdef MP */
   height: 60vh;
+  /* #endif */
   padding: 40rpx 20rpx 20rpx;
 
   .input {
@@ -237,7 +250,7 @@ page {
       button {
         padding: 0;
         background-color: transparent;
-        /* #ifdef H5 */
+        /* #ifdef H5 || APP-PLUS */
         &::after {
           border: none;
         }

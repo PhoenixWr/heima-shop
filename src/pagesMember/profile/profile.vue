@@ -71,6 +71,8 @@ const onRegionPickerChange: UniHelper.RegionPickerOnChange = (event) => {
   regionCode = event.detail.code!
 }
 
+// 保存按钮 loading 效果
+const isLoading = ref(false)
 // 点击保存修改个人信息
 const modifyProfile = async () => {
   const { nickname, gender, birthday, profession } = profile.value
@@ -86,13 +88,19 @@ const modifyProfile = async () => {
     const [provinceCode, cityCode, countyCode] = regionCode
     Object.assign(params, { provinceCode, cityCode, countyCode })
   }
-  const res = await putMemberProfileApi(params)
-  // store个人信息昵称同步更新
-  memberStore.setNickname(res.result.nickname!)
-  uni.showToast({ icon: 'success', title: '保存成功' })
-  setTimeout(() => {
-    uni.navigateBack()
-  }, 600)
+  try {
+    isLoading.value = true
+    const res = await putMemberProfileApi(params)
+    isLoading.value = false
+    // store个人信息昵称同步更新
+    memberStore.setNickname(res.result.nickname!)
+    uni.showToast({ icon: 'success', title: '保存成功' })
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 600)
+  } catch (error) {
+    isLoading.value = false
+  }
 }
 </script>
 
@@ -172,7 +180,7 @@ const modifyProfile = async () => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button" @tap="modifyProfile">保 存</button>
+      <button class="form-button" :loading="isLoading" @tap="modifyProfile">保 存</button>
     </view>
   </view>
 </template>

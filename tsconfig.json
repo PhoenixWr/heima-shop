@@ -3,6 +3,8 @@
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

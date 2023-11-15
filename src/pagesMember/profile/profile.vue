@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import dayjs from 'dayjs'
 import type { Data } from '@/types/global'
 import type { Gender, ProfileDetail, ProfileParams } from '@/types/member'
 import { useMemberStore } from '@/stores'
@@ -9,6 +10,17 @@ import { useNavBarAdaptive } from '@/composables'
 
 // 自定义导航栏安全区域自适应处理
 const { paddingTop } = useNavBarAdaptive()
+
+// 点击返回按钮返回上一页
+const navigateBack = () => {
+  // H5端页面刷新后页面栈会消失，导致 uni.navigateBack 失效
+  // #ifdef H5
+  history.back()
+  // #endif
+  // #ifndef H5
+  uni.navigateBack()
+  // #endif
+}
 
 // 注意：修改个人信息涉及双向绑定必须提供初始值
 // 使用类型断言指定空对象的类型
@@ -27,29 +39,46 @@ onLoad(() => {
 const memberStore = useMemberStore()
 // 修改头像
 const modifyAvatar = () => {
+  // #ifdef MP-WEIXIN
   uni.chooseMedia({
     count: 1, // 最多可以选择的文件个数
     mediaType: ['image'], // 文件类型
     success: async (res) => {
       // 本地临时文件路径
       const { tempFilePath } = res.tempFiles[0]
-      const response = await uni.uploadFile({
-        url: '/member/profile/avatar',
-        name: 'file',
-        filePath: tempFilePath,
-      })
-      if (response.statusCode !== 200) {
-        return uni.showToast({ icon: 'error', title: '头像更新失败' })
-      }
-      const data: Data<{ avatar: string }> = JSON.parse(response.data)
-      const avatar = data.result.avatar // 服务器返回头像信息
-      // 个人信息页数据更新
-      profile.value!.avatar = avatar
-      // store个人信息用户头像同步更新
-      memberStore.setAvatar(avatar)
-      uni.showToast({ icon: 'success', title: '头像更新成功' })
+      uploadFile(tempFilePath)
     },
   })
+  // #endif
+
+  // #ifdef H5 || APP-PLUS
+  uni.chooseImage({
+    count: 1,
+    success: (res) => {
+      const filePath = res.tempFilePaths[0]
+      uploadFile(filePath)
+    },
+  })
+  // #endif
+}
+
+// 上传头像文件
+const uploadFile = async (filePath: string) => {
+  const response = await uni.uploadFile({
+    url: '/member/profile/avatar',
+    name: 'file',
+    filePath,
+  })
+  if (response.statusCode !== 200) {
+    return uni.showToast({ icon: 'error', title: '头像更新失败' })
+  }
+  const data: Data<{ avatar: string }> = JSON.parse(response.data)
+  const avatar = data.result.avatar // 服务器返回头像信息
+  // 个人信息页数据更新
+  profile.value!.avatar = avatar
+  // store个人信息用户头像同步更新
+  memberStore.setAvatar(avatar)
+  uni.showToast({ icon: 'success', title: '头像更新成功' })
 }
 
 // 修改性别
@@ -96,19 +125,31 @@ const modifyProfile = async () => {
     memberStore.setNickname(res.result.nickname!)
     uni.showToast({ icon: 'success', title: '保存成功' })
     setTimeout(() => {
+      // #ifdef H5
+      history.back()
+      // #endif
+      // #ifndef H5
       uni.navigateBack()
+      // #endif
     }, 600)
   } catch (error) {
     isLoading.value = false
   }
 }
+
+// #ifdef H5 || APP-PLUS
+// H5端和APP点击城市信息提示用户
+const onRegionPickerTap = () => {
+  uni.showToast({ icon: 'none', title: '当前平台不支持修改城市' })
+}
+// #endif
 </script>
 
 <template>
   <view class="viewport">
     <!-- 导航栏 -->
     <view class="navbar" :style="{ paddingTop: paddingTop }">
-      <navigator open-type="navigateBack" class="back icon-left" hover-class="none"></navigator>
+      <view class="back icon-left" @tap="navigateBack"></view>
       <view class="title">个人信息</view>
     </view>
     <!-- 头像 -->
@@ -154,7 +195,7 @@ const modifyProfile = async () => {
             class="picker"
             mode="date"
             start="1900-01-01"
-            :end="new Date()"
+            :end="dayjs().format('YYYY-MM-DD')"
             :value="profile?.birthday"
             @change="onDatePickerChange"
           >
@@ -162,6 +203,7 @@ const modifyProfile = async () => {
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
         </view>
+        <!-- #ifdef MP-WEIXIN -->
         <view class="form-item">
           <text class="label">城市</text>
           <picker
@@ -174,6 +216,17 @@ const modifyProfile = async () => {
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
+        <!-- #endif -->
+        <!-- #ifdef H5 || APP-PLUS -->
+        <view class="form-item">
+          <text class="label">城市</text>
+          <view class="picker" @tap="onRegionPickerTap">
+            <text class="region">
+              {{ profile.fullLocation || '暂无城市信息' }}
+            </text>
+          </view>
+        </view>
+        <!-- #endif -->
         <view class="form-item">
           <text class="label">职业</text>
           <input v-model="profile.profession" class="input" type="text" placeholder="请填写职业" />
@@ -281,7 +334,8 @@ page {
       color: #333;
     }
 
-    .account {
+    .account,
+    .region {
       color: #666;
     }
 

@@ -131,6 +131,10 @@
       {
         "name": "profile",
         "path": "pagesMember/profile/profile"
+      },
+      {
+        "name": "address",
+        "path": "pagesMember/address/address"
       }
     ]
   },
@@ -152,6 +156,18 @@
             "navigationBarTextStyle": "white",
             "navigationBarTitleText": "个人信息",
             "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "address/address",
+          "style": {
+            "navigationBarTitleText": "地址管理"
+          }
+        },
+        {
+          "path": "address-form/address-form",
+          "style": {
+            "navigationBarTitleText": ""
           }
         }
       ]

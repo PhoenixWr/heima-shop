@@ -135,6 +135,10 @@
       {
         "name": "address",
         "path": "pagesMember/address/address"
+      },
+      {
+        "name": "address-form",
+        "path": "pagesMember/address-form/address-form"
       }
     ]
   },

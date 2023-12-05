@@ -1,19 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
-import type { AddressItem } from '@/types/address'
-import { getMemberAddressApi } from '@/services/address'
+import { storeToRefs } from 'pinia'
+import { onLoad } from '@dcloudio/uni-app'
+import { useAddressStore } from '@/stores'
 
-const addressList = ref<AddressItem[]>([]) // 收货地址列表
-// 获取收货地址列表数据
-const getAddressList = async () => {
-  const res = await getMemberAddressApi()
-  addressList.value = res.result
-}
+const addressStore = useAddressStore()
+const { addressList } = storeToRefs(addressStore)
 
-// 监听页面显示
-onShow(() => {
-  getAddressList()
+// 监听页面加载
+onLoad(() => {
+  addressStore.getAddressList()
 })
 </script>
 
